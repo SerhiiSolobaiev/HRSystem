@@ -18,6 +18,98 @@ import java.util.Map;
 @RestController
 public class FormController {
 
+    /*
+  GET http://localhost:8080/student/fill_form :
+  [{
+    "id": 1,
+    "caption": "Оберіть рівень володіння англійською мовою:",
+    "typeId": 0,
+    "typeValue": "combobox",
+    "additionId": 0,
+    "additionValue": null,
+    "courseId": 0,
+    "orderNumber": 0,
+    "additionValueArray": [
+      "Beginner",
+      "Elementary",
+      "Pre-Intermediate",
+      "Low Intermediate",
+      "Intermediate",
+      "Upper Intermediate",
+      "Pre-advanced",
+      "Advanced",
+      "Very Advanced"
+    ],
+    "mandatory": true
+  },
+  {
+    "id": 2,
+    "caption": "З якими мовами програмування ви знайомі?",
+    "typeId": 0,
+    "typeValue": "checkbox",
+    "additionId": 0,
+    "additionValue": null,
+    "courseId": 0,
+    "orderNumber": 0,
+    "additionValueArray": [
+      "Java",
+      "C",
+      "C++",
+      "C#",
+      "Pascal"
+    ],
+    "mandatory": false
+  },
+  ...
+
+  GET http://localhost:8080/student/get_all_answers
+  {
+    "id": 100,
+    "answers": {
+      "1": "111111111111111111111111111111111",
+      "2": "dsfdsf",
+      "3": "1",
+      "4": "2",
+      "5": "1"
+    }
+  },
+  {
+    "id": 101,
+    "answers": {
+      "1": "hghgfgh",
+      "2": "gfh",
+      "3": "fg",
+      "4": "101",
+      "5": "answer34saaaaaaaaaaaaaaaaaaaaa"
+    }
+  }
+]
+
+POST http://localhost:8080/student/fill_form : - записівает ответы в табличку
+body:{
+    "id": 300,
+    "answers": {
+      "1": "1234567890",
+      "2": "dsfdsf",
+      "3": "1",
+      "4": "2",
+      "5": "1"
+    }}
+
+
+PUT http://localhost:8080/student/fill_form - делает update (редактирование данных анкеты)
+body:{
+    "id": 300,
+    "answers": {
+      "1": "1234567890",
+      "2": "dsfdsf",
+      "3": "1",
+      "4": "2",
+      "5": "1"
+    }}
+     */
+
+
     @Autowired
     QuestionService questionService;
 
@@ -34,11 +126,13 @@ public class FormController {
         if (questions.isEmpty()) {
             return new ResponseEntity<List<Question>>(HttpStatus.NO_CONTENT);
         }
+        //TODO
+        //Fill all fields in entity Question
         return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
     }
 
     /**
-     * Get all answers of all candidates
+     * Get all answers of all candidates (for some statistic=) )
      *
      * @return List of all answers of all candidates
      */
@@ -57,6 +151,9 @@ public class FormController {
     @RequestMapping(value = "/student/fill_form", method = RequestMethod.POST)
     public ResponseEntity<Void> saveCandidateForm(@RequestBody CandidateAnswer answers) {
 
+
+        //TODO
+        //THINK ABOUT ID_CANDIDATE and ID_USER
         if (candidateAnswerService.isCandidateAnswersExist(answers.getId())) {
             /**
              * Student already filled the form
@@ -90,9 +187,7 @@ public class FormController {
             return new ResponseEntity<CandidateAnswer>(HttpStatus.NOT_FOUND);
         }
 
-        for (Map.Entry e : answers.getAnswers().entrySet()) {
-            candidateAnswer.setAnswers(answers.getAnswers());
-        }
+        candidateAnswer.setAnswers(answers.getAnswers());
 
         candidateAnswerService.updateCandidateAnswer(candidateAnswer);
         return new ResponseEntity<CandidateAnswer>(candidateAnswer, HttpStatus.OK);
