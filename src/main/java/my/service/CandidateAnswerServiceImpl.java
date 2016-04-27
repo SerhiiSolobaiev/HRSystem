@@ -77,33 +77,27 @@ public class CandidateAnswerServiceImpl implements CandidateAnswerService {
     public List<CandidateAnswer> getAllAnswers() {
 
         List<CandidateAnswer> allAnswers = new ArrayList<>();
-        String query = "SELECT * FROM hr_system.candidate_answer";
+        String query = "SELECT candidate_id FROM hr_system.candidate_answer GROUP BY candidate_answer.candidate_id";
         ResultSet rs = null;
-//        try {
-//            connection = ConnectionFactory.getConnection();
-//            statement = connection.prepareStatement(query);
-//            rs = statement.executeQuery();
-//
-//            while (rs.next()) {
-//                long idStudent = rs.getLong("id");
-//                String email = rs.getString("email");
-//                String name = rs.getString("name");
-//                String surname = rs.getString("surname");
-//                String patronymic = rs.getString("patronymic");
-//
-//                allAnswers.add(new CandidateAnswer(idStudent, ));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if (rs != null) rs.close();
-//                if (statement != null) statement.close();
-//                if (connection != null) connection.close();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+        try {
+            connection = ConnectionFactory.getConnection();
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+
+            while (rs.next()) {
+                allAnswers.add(findById(rs.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return allAnswers;
     }
 
@@ -120,10 +114,9 @@ public class CandidateAnswerServiceImpl implements CandidateAnswerService {
             int idCandidateAnswer = id;
             Map<Integer, String> map = new TreeMap<>();
 
-            if (rs.next()) {
+            while (rs.next()) {
                 int idQuestion = rs.getInt("question_id");
                 String value = rs.getString("value");
-
                 map.put(idQuestion, value);
             }
 
@@ -151,8 +144,6 @@ public class CandidateAnswerServiceImpl implements CandidateAnswerService {
                 String query = "UPDATE hr_system.candidate_answer SET value = ?" +
                         "WHERE candidate_id = ? AND question_id = ?";
                 statement = connection.prepareStatement(query);
-
-                System.out.println("updateCandidateAnswer === answers.getId() = " + answers.getId() + " : " + e.getKey() + " " + e.getValue());
 
                 int idQuestion = (Integer) e.getKey();
                 String value = (String) e.getValue();
