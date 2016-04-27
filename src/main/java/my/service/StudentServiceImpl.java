@@ -82,44 +82,12 @@ public class StudentServiceImpl implements StudentService {
         return student;
     }
 
-    public Student findByName(String name) {
-        String query = "SELECT * FROM hr_system.users WHERE name = " + name;
-        ResultSet rs = null;
-        Student student = null;
-        try {
-            connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(query);
-            rs = statement.executeQuery();
-
-            if (rs.next()) {
-                long idStudent = rs.getLong("id");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                String nameStudent = rs.getString("name");
-                String surname = rs.getString("surname");
-                String patronymic = rs.getString("patronymic");
-
-                student = new Student(idStudent, email, password, name, surname, patronymic);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return student;
-    }
-
     public void saveStudent(Student student) {
         String query = "INSERT INTO hr_system.users (email, password, name, surname, patronymic) VALUES (lower(?),?,?,?,?)";
         try {
             connection = ConnectionFactory.getConnection();
             statement = connection.prepareStatement(query);
+
             statement.setString(1, student.getEmail());
             statement.setString(2, student.getPassword());
             statement.setString(3, student.getName());
@@ -145,6 +113,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             connection = ConnectionFactory.getConnection();
             statement = connection.prepareStatement(query);
+
             statement.setString(1, student.getEmail());
             statement.setString(2, student.getPassword());
             statement.setString(3, student.getName());
@@ -171,7 +140,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public boolean isStudentExist(Student student) {
-        return findByName(student.getName()) != null;
+        return findById(student.getId()) != null;
     }
 
     public void deleteAllStudents() {

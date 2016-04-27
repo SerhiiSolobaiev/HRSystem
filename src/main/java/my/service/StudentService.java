@@ -9,8 +9,6 @@ public interface StudentService {
 
     Student findById(long id);
 
-    Student findByName(String name);
-
     void saveStudent(Student user);
 
     void updateStudent(Student user);
@@ -21,6 +19,6 @@ public interface StudentService {
 
     void deleteAllStudents();
 
-    public boolean isStudentExist(Student user);
+    boolean isStudentExist(Student user);
 
 }
