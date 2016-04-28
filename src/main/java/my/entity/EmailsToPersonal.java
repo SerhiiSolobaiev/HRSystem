@@ -3,14 +3,14 @@ package my.entity;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class EmailsBLIA {
+public class EmailsToPersonal {
     String subject;
     String text;
     String[] emails;
     String admin_email;
     String admin_password;
 
-    public EmailsBLIA() {
+    public EmailsToPersonal() {
     }
 
     public String getText() {
@@ -55,7 +55,7 @@ public class EmailsBLIA {
 
     @Override
     public String toString() {
-        return "EmailsBLIA{" +
+        return "EmailsToPersonal{" +
                 "subject='" + subject + '\'' +
                 ", text='" + text + '\'' +
                 ", emails=" + Arrays.toString(emails) +

@@ -40,7 +40,7 @@ public class Question {
      * Table "question_addition"
      * Value addition by question_id and addition_id
      */
-    private String additionValue;
+    private List<String> additionValueArray;
     /**
      * Table "question_course_maps"
      * ID entry in tables "course_setting"
@@ -52,46 +52,45 @@ public class Question {
      */
     private int orderNumber;
 
-//------------------------------------------------------------------------------------------------
-    /**
-     * For better displaying
-     */
-    private List<String> additionValueArray;
-//------------------------------------------------------------------------------------------------
-
     public Question() {
     }
 
-    public Question(String caption, int typeId, boolean isMandatory) {
-        this.caption = caption;
-        this.typeId = typeId;
-        this.isMandatory = isMandatory;
-    }
-
-    public Question(int id, String caption, int typeId, boolean isMandatory) {
-        this.id = id;
-        this.caption = caption;
-        this.typeId = typeId;
-        this.isMandatory = isMandatory;
-    }
-
-//------------------------------------------------------------------------------------------------
-    public Question(int id, String caption, boolean isMandatory, String typeValue, List<String> additionValueArray){
+    public Question(int id, String caption, boolean isMandatory, int typeId, String typeValue, int additionId,
+                    List<String> additionValueArray, int courseId, int orderNumber) {
         this.id = id;
         this.caption = caption;
         this.isMandatory = isMandatory;
+        this.typeId = typeId;
+        this.typeValue = typeValue;
+        this.additionId = additionId;
+        this.additionValueArray = additionValueArray;
+        this.courseId = courseId;
+        this.orderNumber = orderNumber;
+    }
+
+    public Question(String caption, boolean isMandatory, int typeId, String typeValue,
+                    List<String> additionValueArray, int courseId, int additionId, int orderNumber) {
+        this.caption = caption;
+        this.isMandatory = isMandatory;
+        this.typeId = typeId;
         this.typeValue = typeValue;
         this.additionValueArray = additionValueArray;
+        this.courseId = courseId;
+        this.additionId = additionId;
+        this.orderNumber = orderNumber;
     }
 
-    public List<String> getAdditionValueArray() {
-        return additionValueArray;
-    }
-
-    public void setAdditionValueArray(List<String> additionValueArray) {
+    public Question(int id, String caption, boolean isMandatory, int typeId, String typeValue,
+                    List<String> additionValueArray, int courseId, int orderNumber) {
+        this.id = id;
+        this.caption = caption;
+        this.isMandatory = isMandatory;
+        this.typeId = typeId;
+        this.typeValue = typeValue;
         this.additionValueArray = additionValueArray;
+        this.courseId = courseId;
+        this.orderNumber = orderNumber;
     }
-//------------------------------------------------------------------------------------------------
 
     public int getId() {
         return id;
@@ -113,8 +112,8 @@ public class Question {
         return isMandatory;
     }
 
-    public void setMandatory(boolean isMandatory) {
-        this.isMandatory = isMandatory;
+    public void setMandatory(boolean mandatory) {
+        isMandatory = mandatory;
     }
 
     public int getTypeId() {
@@ -141,12 +140,12 @@ public class Question {
         this.additionId = additionId;
     }
 
-    public String getAdditionValue() {
-        return additionValue;
+    public List<String> getAdditionValueArray() {
+        return additionValueArray;
     }
 
-    public void setAdditionValue(String additionValue) {
-        this.additionValue = additionValue;
+    public void setAdditionValueArray(List<String> additionValueArray) {
+        this.additionValueArray = additionValueArray;
     }
 
     public int getCourseId() {
@@ -169,9 +168,14 @@ public class Question {
     public String toString() {
         return "Question{" +
                 "id=" + id +
-                ", caption=" + caption +
-                ", type_id=" + typeId +
-                ", is_mandatory=" + isMandatory +
-                "}";
+                ", caption='" + caption + '\'' +
+                ", isMandatory=" + isMandatory +
+                ", typeId=" + typeId +
+                ", typeValue='" + typeValue + '\'' +
+                ", additionId=" + additionId +
+                ", additionValueArray=" + additionValueArray +
+                ", courseId=" + courseId +
+                ", orderNumber=" + orderNumber +
+                '}';
     }
 }

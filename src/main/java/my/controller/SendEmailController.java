@@ -1,6 +1,6 @@
 package my.controller;
 
-import my.entity.EmailsBLIA;
+import my.entity.EmailsToPersonal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ public class SendEmailController {
 
 
     @RequestMapping(value = "/sendEmail/", method = RequestMethod.POST)
-    public ResponseEntity<Void> sendEmail(@RequestBody EmailsBLIA emailsBLIA) {
+    public ResponseEntity<Void> sendEmail(@RequestBody EmailsToPersonal emailsBLIA) {
 
         System.out.println("Sending emails to " + emailsBLIA.getEmails().length + " users");
 
@@ -26,11 +26,6 @@ public class SendEmailController {
         String subject = emailsBLIA.getSubject();
         String text = emailsBLIA.getText() + " <br>Time: <a href=\"http://htmlbook.ru/html/a/href\">"
                 + new SimpleDateFormat("yyyy_MMM_dd_HH:mm").format(Calendar.getInstance().getTime()) + "</a>";
-
-
-//                "<h1>TEST</h1>" +
-//                "<h2>Text of the body with time as link</h2><br>Time: <a href=\"http://htmlbook.ru/html/a/href\">"
-//                + new SimpleDateFormat("yyyy_MMM_dd_HH:mm").format(Calendar.getInstance().getTime()) + "</a>";
 
         sendLettersToEmails(emailsBLIA.getEmails(), subject, text, emailsBLIA.getAdmin_email(), emailsBLIA.getAdmin_password());
         return new ResponseEntity<Void>(HttpStatus.OK);
@@ -77,37 +72,24 @@ public class SendEmailController {
              */
             message.setFrom(new InternetAddress(username));
 
-            /**
-             * Send one email to one user (for hide all recipients in message "whom" part)
-             */
-            for (int i = 0; i < toEmails.length; i++) {
-
-                /**
-                 * Mail where letters will be sent
-                 */
-                message.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmails[i]));
-
-                message.setSubject(subject);
-
-                /**
-                 * Text (Body) of the letter can be html document
-                 */
-                message.setContent(text, "text/html");
-
-                Transport.send(message);
-
-                System.out.println("Letter with subject " + subject + " was sent");
+            InternetAddress[] addressTo = new InternetAddress[toEmails.length];
+            for (int i = 0; i < toEmails.length; i++)
+            {
+                addressTo[i] = new InternetAddress(toEmails[i]);
             }
+
+            message.setRecipients(Message.RecipientType.BCC, addressTo);
+
+            message.setSubject(subject);
+
+            message.setContent(text, "text/html");
+
+            Transport.send(message);
+
+            System.out.println("Letter with subject " + subject + " was sent");
 
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    @RequestMapping(value = "/proverka/", method = RequestMethod.GET)
-    public ResponseEntity<Void> proverka() {
-
-        return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
     }
 }

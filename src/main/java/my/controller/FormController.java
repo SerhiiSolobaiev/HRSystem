@@ -126,8 +126,6 @@ body:{
         if (questions.isEmpty()) {
             return new ResponseEntity<List<Question>>(HttpStatus.NO_CONTENT);
         }
-        //TODO
-        //Fill all fields in entity Question
         return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
     }
 
